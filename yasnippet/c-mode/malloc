@@ -1,0 +1,6 @@
+${1:var} = (${2:char *})malloc(sizeof(${2:$(substring text 0
+	   					     (or (string-match "\\*" text) (length text)))})*${3:len});
+if($1 == NULL) {
+$>perror("malloc");
+$>exit(1);
+}

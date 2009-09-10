@@ -1,0 +1,22 @@
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <asm/unistd.h>
+#include <linux/syscalls.h>
+
+MODULE_LICENSE("GPL");
+
+
+static int __init init_lkm (void)
+{
+  $0
+  return 0;
+}
+
+static void __exit exit_lkm (void)
+{
+
+}
+
+module_init (init_lkm);
+module_exit (exit_lkm);

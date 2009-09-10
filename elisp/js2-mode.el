@@ -1,0 +1,1 @@
+/home/mad/svn/js2-mode-read-only/build/js2-mode.el

@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+\usepackage[english,russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{enumerate}
+\usepackage[left=1cm, right=1cm, top=1cm, bottom=1cm, nohead,nofoot]{geometry}
+\pagestyle{empty}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{10pt plus 6pt minus 4pt}
+
+\begin{document}
+
+\begin{center}
+  \large{\bf{Cанкт-Петербургский государственный политехнический университет \\\\
+      Факультет технической кибернетики \\\\
+      \medskip
+      \underline{Кафедра информационной безопасности компьютерных систем} \\\\
+    }
+  }
+  \vspace{5cm}
+  \large{\textbf{ОТЧЕТ \\\\
+      по лабораторной работе № ${1:Номер лабы}\\\\
+      \vspace{\baselineskip}
+      \`\`${2:Название лабы}'' \\\\
+      \vspace{1cm}
+      по курсу \`\`${3:Предмет}'' \\\\
+    }
+  }
+\end{center}
+\vspace{8cm}
+\large\textbf{
+  {\begin{flushright}
+      \begin{tabular}{lc}
+        Студент: & Ершов П.А.\\\\
+        Группа: & ${4:3}088/1\\\\
+        Преподаватель: & ${5:Препод}\\\\
+      \end{tabular}
+    \end{flushright}
+  }
+}
+\vspace{2cm}
+\begin{center}
+\textbf{Санкт-Петербург --- `(substring (current-time-string) -4)`}
+\end{center}
+\newpage
+\section{ФОРМУЛИРОВКА ЗАДАНИЯ}
+$0
+\section{ИСПОЛЬЗОВАННЫЕ ТЕОРЕТИЧЕСКИЕ СВЕДЕНИЯ}
+\section{ХОД РАБОТЫ}
+\section{РЕЗУЛЬТАТЫ РАБОТЫ}
+\subsection{ввв}
+\section{ВЫВОД}
+\newpage
+\begin{flushright}
+  \textbf{\textit{Приложение}} \\\\
+\end{flushright}
+\end{document}
+
+

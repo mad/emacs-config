@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+
+#if defined _WIN32
+#include <winsock.h>
+#define sleep(x) Sleep(x)
+#define close(x) closesocket(x)
+#pragma comment(lib, "ws2_32.lib")
+#else
+#include <signal.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#endif
+
+#define NIPQUAD(addr) \
+	((unsigned char *)&addr)[0], \
+	((unsigned char *)&addr)[1], \
+	((unsigned char *)&addr)[2], \
+	((unsigned char *)&addr)[3]
+
+int main(int c, char**a)
+{
+  int s, snew;
+  struct sockaddr_in ssin, csin;
+  int status, lensin;
+
+  s = socket(AF_INET, SOCK_STREAM, 0);
+  if(s == -1) {
+    perror("socket");
+    exit(1);
+  }
+
+  if(c < 2) {
+    fprintf(stderr, "usage: %s [port]\n", a[0]);
+    exit(1);
+  }
+
+  ssin.sin_family = AF_INET;
+  ssin.sin_addr.s_addr = INADDR_ANY;
+  ssin.sin_port = htons(atoi(a[1]));
+
+  status = bind(s, (struct sockaddr*)&ssin, sizeof(ssin));
+  if(status == -1) {
+    perror("bind");
+    exit(1);
+  }
+
+  status = listen(s, 5);
+  if(status == -1) {
+    perror("listen");
+    exit(1);
+  }
+
+  for(;;) {
+    lensin = sizeof(csin);
+    snew = accept(s, (struct sockaddr*)&csin, &lensin);
+    if(snew == -1) {
+      perror("accept");
+      exit(1);
+    }
+    printf("[connected] %u.%u.%u.%u\n", 
+	   NIPQUAD(csin.sin_addr.s_addr));	
+    $0
+  }
+  return 0;
+}
+

@@ -1,0 +1,72 @@
+#define MAX_LEN 1024
+
+static char *fetch_url(const char *host, const char *url, int *res_len)
+{
+  struct hostent *phe;
+  struct sockaddr_in sin;
+  int s, len, len_respose;
+  char *body_send;
+  char *body_recv;
+  char *body_response;
+
+  s = socket(AF_INET, SOCK_STREAM, 0);
+  if(s == -1) {
+    perror("socket");
+    return NULL;
+  }
+
+  phe = gethostbyname(host);
+  if(phe == NULL) {
+    perror("gethostbyname");
+    return NULL;
+  }
+
+  sin.sin_family = AF_INET;
+  sin.sin_addr.s_addr = ((struct in_addr*)phe->h_addr_list[0])->s_addr;;
+  sin.sin_port = htons(80);
+
+  if(connect(s, (struct sockaddr*)&sin, sizeof(struct sockaddr_in))) {
+    perror("connect");
+    return NULL;
+  }
+
+  body_send = (char *)malloc(MAX_LEN);
+  body_recv = (char *)malloc(MAX_LEN);
+  body_response = (char *)malloc(MAX_LEN);
+
+  memset(body_response, 0, MAX_LEN);
+  len_respose = 0;
+
+  sprintf(body_send,
+	  "GET /%s HTTP/1.1\r\n"
+	  "Host: %s\r\n"
+	  "Connection: close\r\n"
+	  "Accept: */*\r\n\r\n", url, host);
+
+  send(s, body_send, strlen(body_send), 0);
+
+  int new_len = MAX_LEN;
+  char *tmp;
+
+  do {
+    len = recv(s, body_recv, MAX_LEN, 0);
+    len_respose += len;
+    if (len_respose > new_len) {
+      new_len = new_len * 2;
+      body_response = (char *) realloc(body_response, new_len );
+    }
+    memcpy(body_response + (len_respose - len), body_recv, len);
+  } while (len);
+
+  // remove headers
+  tmp = strstr(body_response, "\r\n\r\n");
+  len_respose -= (tmp - body_response + 4);
+  memcpy(body_response, tmp + 4, len_respose);
+
+
+  free(body_recv);
+  free(body_send);
+
+  *res_len = len_respose;
+  return body_response;
+}

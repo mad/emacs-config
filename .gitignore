@@ -1,0 +1,13 @@
+.emacs.desktop
+.org-id-locations
+auto-save-list/*
+url/*
+saveplace
+tramp
+emms/*
+private.el
+.gnus.el
+.juick-bkm
+frequencies
+init.el.old
+miniinit.el

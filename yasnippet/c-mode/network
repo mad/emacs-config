@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+
+#if defined _WIN32
+#include <winsock.h>
+#define sleep(x) Sleep(x)
+#define close(x) closesocket(x)
+#pragma comment(lib, "ws2_32.lib")
+#else
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#endif
+
+int main(int c, char**a)
+{
+  int s;
+  struct sockaddr_in sin;
+
+  s = socket(AF_INET, SOCK_STREAM, 0);
+  if(s == -1) {
+    perror("socket");
+    exit(1);
+  }
+
+  if(c < 3) {
+    fprintf(stderr, "usage: %s [addr] [port]\n", a[0]);
+    exit(1);
+  }
+
+  sin.sin_family = AF_INET;
+  sin.sin_addr.s_addr = inet_addr(a[1]);
+  sin.sin_port = htons(atoi(a[2]));
+
+  if(connect(s, (struct sockaddr*)&sin, sizeof(struct sockaddr_in))) {
+    perror("Connect");
+    exit(1);
+  }
+  $0
+  return 0;
+}
