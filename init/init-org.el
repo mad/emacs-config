@@ -1,4 +1,12 @@
-;; Org
+(setq org-default-notes-file "~/.notes")
+(setq remember-annotation-functions '(org-remember-annotation))
+(setq remember-handler-functions '(org-remember-handler))
+(add-hook 'remember-mode-hook 'org-remember-apply-template)
+
+(setq org-remember-templates
+      '((?t "TIPS: %?\n  %i\n  %a" "~/.notes")
+        (?h "* TODO %?\n  %i\n  %a" "~/git/home.org")))
+
 (defun my-org-mode-hook()
   (local-set-key [M-left] 'windmove-left)
   (local-set-key [M-right] 'windmove-right)

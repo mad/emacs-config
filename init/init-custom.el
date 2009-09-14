@@ -27,9 +27,8 @@
                                 latex-mode plain-tex-mode))
       (let ((mark-even-if-inactive t))
         (indent-region (region-beginning) (region-end) nil))))
-;; Trivial mode
 
-(defun define-trivial-mode(mode-prefix file-regexp &optional command)
+(defun define-trivial-mode (mode-prefix file-regexp &optional command)
   (or command (setq command mode-prefix))
   (let ((mode-command (intern (concat mode-prefix "-mode"))))
     (fset mode-command
@@ -44,7 +43,6 @@
    	       (kill-buffer kbuf))))
     (add-to-list 'auto-mode-alist (cons file-regexp mode-command))))
 
-
 (define-trivial-mode "gv" "\\.ps$")
 (define-trivial-mode "gv" "\\.eps$")
 (define-trivial-mode "xpdf" "\\.pdf$")
@@ -52,6 +50,7 @@
 (define-trivial-mode "djview" "\\.djvu$")
 (define-trivial-mode "mplayer" "\\.mp3$")
 (define-trivial-mode "ods" "\\.ods$" "oocalc")
+(define-trivial-mode "swriter" "\\.doc$")
 
 ;; Use M-backspace or C-backspace for kill word
 (defun my-delete-word-or-kill-region (arg)
@@ -175,12 +174,15 @@ If POS set to find url from this POS or
   "Take screenshot from root display.
 If ARG not set, take imediately"
   (interactive "P")
-  (message "wait %d sec and take screenshot" (or arg 0))
-  (run-with-idle-timer (or arg 0) nil
-                       '(lambda()
-                          ;; -geometry 1024x768
-                          (shell-command "import -window root ~/screen.png")
-                          (browse-url (upload-image "~/screen.png")))))
+  (when (y-or-n-p "Take screen? ")
+    (message "wait %d sec and take screenshot" (or arg 0))
+    (run-with-idle-timer (or arg 0) nil
+                         '(lambda()
+                            ;; -geometry 1024x768
+                            (shell-command "import -window root ~/screen.png")
+                            (if (y-or-no-p "Upload screen ? ")
+                                (browse-url (upload-image "~/screen.png"))
+                              (browse-url "~/screen.png"))))))
 (global-set-key [print] 'take-screenshot-delayed)
 
 ;; TODO: make asynch

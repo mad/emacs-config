@@ -10,11 +10,6 @@
 ;; (setq jabber-history-enabled t)
 ;; (setq jabber-use-global-history nil)
 
-(defadvice jabber-fix-status (around jabber-fix-status-around-advice
-                                     (status) activate)
-  ad-do-it
-  (setq ad-return-value (concat "\n     " status)))
-
 
 (defun jabber-message-osd (from buffer text proposed-alert)
   "Display a message using the osd_cat program."

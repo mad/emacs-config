@@ -1,4 +1,4 @@
-;;; Time-stamp: "2009-09-10 23:43:00 mad"
+;;; Time-stamp: "2009-09-12 18:05:31 mad"
 ;;; GNU Emacs 23.1.1 (i686-pc-linux-gnu, GTK+ Version 2.14.7)
 ;;; of 2009-08-02 on home
 
@@ -33,6 +33,7 @@
 
 (load "init-org")
 (load "init-ditta")
+(load "init-dired")
 (load "init-elscreen")
 (load "init-irfc")
 (load "init-markdown")
@@ -52,5 +53,6 @@
 (load "init-pastebin")
 (load "init-tv")
 (load "init-w3m")
+(load "init-sdcv")
 
 (load "init-personal")

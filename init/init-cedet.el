@@ -22,7 +22,7 @@
 (setq semantic-idle-scheduler-idle-time 1)
 (setq semantic-self-insert-show-completion-function
       (lambda nil (semantic-ia-complete-symbol-menu (point))))
-(setq global-semantic-tag-folding-mode t nil (semantic-util-modes))
+(setq global-semantic-tag-folding-mode t)
 
 (global-srecode-minor-mode 1)
 (global-semantic-mru-bookmark-mode 1)

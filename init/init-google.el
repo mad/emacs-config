@@ -23,7 +23,7 @@ ARG how many page you have read, default 5 page"
   (let* ((arg (or arg "5"))
          ;; TODO: rewrite python script to elisp
          ;; http://emacspeak.googlecode.com/svn/trunk/lisp/g-client/
-         (cmd (format "python ~/snip/getsearch.py %s 2>&1 | cat > /tmp/googlehist" arg)))
+         (cmd (format "python ~/scratches/py/getsearch.py %s 2>&1 | cat > /tmp/googlehist" arg)))
     (message "getting %s fileds" arg)
     (shell-command cmd)
     (switch-to-buffer "*Google History*")
@@ -38,7 +38,7 @@ default read last 5 msg"
   (let* ((arg (or arg "5"))
          ;; TODO: rewrite python script to elisp
          ;; http://emacspeak.googlecode.com/svn/trunk/lisp/g-client/
-         (cmd (format "python ~/snip/getmail.py %s 2>&1 | cat > /tmp/googlemail" arg)))
+         (cmd (format "python ~/scratches/py/getmail.py %s 2>&1 | cat > /tmp/googlemail" arg)))
     (message "getting %s msg" arg)
     (shell-command cmd)
     (switch-to-buffer "*Google Mail*")
