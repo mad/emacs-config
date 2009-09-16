@@ -27,7 +27,8 @@
 (global-srecode-minor-mode 1)
 (global-semantic-mru-bookmark-mode 1)
 (global-semantic-folding-mode 1)
-(global-semantic-idle-tag-highlight-mode 1)
+;; BUG: buffer closed and switched to latest buffer
+(global-semantic-idle-tag-highlight-mode -1)
 (global-ede-mode t)
 
 (defun my-cedet-hook ()
@@ -46,10 +47,10 @@
 (add-hook 'lisp-mode-hook 'my-cedet-hook)
 (add-hook 'emacs-lisp-mode-hook 'my-cedet-hook)
 
-(defun my-semantic-hook ()
-  (imenu-add-to-menubar "TAGS"))
+;; (defun my-semantic-hook ()
+;;   (imenu-add-to-menubar "TAGS"))
 
-(add-hook 'semantic-init-hooks 'my-semantic-hook)
+;; (add-hook 'semantic-init-hooks 'my-semantic-hook)
 
 (defun my-c-mode-cedet-hook ()
   ;; (local-set-key "." 'semantic-complete-self-insert)

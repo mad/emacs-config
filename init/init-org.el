@@ -4,7 +4,11 @@
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
 
 (setq org-remember-templates
-      '((?t "TIPS: %?\n  %i\n  %a" "~/.notes")
+      '((?t "* TIPS %?\n  %i\n  %a" "~/.notes")
+
+        (?p "* PHONE                               :PHONE:
+%u
+%?" "~/phone.org" bottom nil)
         (?h "* TODO %?\n  %i\n  %a" "~/git/home.org")))
 
 (defun my-org-mode-hook()
@@ -19,4 +23,3 @@
 (add-hook 'org-mode-hook
           (lambda ()
             (flyspell-mode 1)))
-
