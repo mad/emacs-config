@@ -1,10 +1,12 @@
+
+(setq org-agenda-files '("~/study_5/study-5.org" "~/git/home.org"))
 (setq org-default-notes-file "~/.notes")
 (setq remember-annotation-functions '(org-remember-annotation))
 (setq remember-handler-functions '(org-remember-handler))
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
 
 (setq org-remember-templates
-      '((?t "* TIPS %?\n  %i\n  %a" "~/.notes")
+      '((?t "* TIPS %?\n  %i\n  %a" "~/git/TIPS.org")
 
         (?p "* PHONE                               :PHONE:
 %u

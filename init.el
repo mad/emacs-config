@@ -1,4 +1,4 @@
-;;; Time-stamp: "2009-09-16 13:14:51 mad"
+;;; Time-stamp: "2009-09-24 22:20:48 mad"
 ;;; GNU Emacs 23.1.1 (i686-pc-linux-gnu, GTK+ Version 2.14.7)
 ;;; of 2009-08-02 on home
 
@@ -30,6 +30,7 @@
 (load "init-ediff")
 (load "init-magit")
 (load "init-sr-speedbar")
+(load "init-company")
 
 (load "init-org")
 (load "init-ditta")

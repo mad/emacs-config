@@ -11,3 +11,4 @@ private.el
 frequencies
 init.el.old
 miniinit.el
+elpa/*
