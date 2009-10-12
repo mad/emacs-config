@@ -1,17 +1,16 @@
 
-(setq org-agenda-files '("~/study_5/study-5.org" "~/git/home.org"))
+(setq org-agenda-files '("~/org/study-5.org" "~/org/home.org"))
 (setq org-default-notes-file "~/.notes")
 (setq remember-annotation-functions '(org-remember-annotation))
 (setq remember-handler-functions '(org-remember-handler))
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
 
 (setq org-remember-templates
-      '((?t "* TIPS %?\n  %i\n  %a" "~/git/TIPS.org")
-
-        (?p "* PHONE                               :PHONE:
-%u
-%?" "~/phone.org" bottom nil)
-        (?h "* TODO %?\n  %i\n  %a" "~/git/home.org")))
+      '((?n "* NOTE %U %?\n  %i\n  %a" "~/org/notes.org")
+        (?t "%?\n%i\n%a" "~/org/TIPS.org" bottom)
+        (?p "* PHONE %?\n %i %u %?" "~/phone.org" bottom nil)
+        (?x "* XCLIP %U %?\n  %x\n  %a" "~/org/TIPS.org" bottom nil)
+        (?h "* TODO %T %?\n  %i\n  %a" "~/org/home.org")))
 
 (defun my-org-mode-hook()
   (local-set-key [M-left] 'windmove-left)

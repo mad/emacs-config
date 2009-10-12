@@ -283,7 +283,7 @@ If this many lines are not available, prefer to display the tooltip above."
     (company-nxml . "nxml")
     (company-oddmuse . "Oddmuse")
     (company-pysmell . "PySmell")
-    (company-ropemacs . "ropemacs")
+    ;; (company-ropemacs . "ropemacs")
     (company-semantic . "CEDET Semantic")
     (company-tempo . "Tempo templates")
     (company-xcode . "Xcode")))
@@ -299,7 +299,7 @@ If this many lines are not available, prefer to display the tooltip above."
 
 (defcustom company-backends '(company-elisp company-nxml company-css
                               company-eclim company-semantic company-xcode
-                              company-ropemacs
+                              ;; company-ropemacs
                               (company-gtags company-etags company-dabbrev-code
                                company-pysmell company-keywords)
                               company-oddmuse company-files company-dabbrev)

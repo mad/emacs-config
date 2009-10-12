@@ -90,3 +90,10 @@ ln -s $SVN_PATH/yasnippet-read-only $EMACS_DIR/yasnippet
 cd $SVN_PATH
 svn checkout http://js2-mode.googlecode.com/svn/trunk/ js2-mode-read-only
 ln -s $SVN_PATH/js2-mode-read-only/js2-build.el $EMACS_DIR/js2-build.el
+
+cd $EMACS_DIR/
+mkdir company
+wget http://nschum.de/src/emacs/company-mode/company-0.4.3.tar.bz2
+tar xjf company-0.4.3.tar.bz2
+mv *.el company
+rm -rf company-0.4.3.tar.bz2

@@ -1,4 +1,5 @@
-
+;; author: pluskid
+;; http://lifegoo.pluskid.org/wiki/EmacsStardict.html
 (defun my-star-dict ()
   (interactive)
   (let ((begin (point-min))
@@ -11,7 +12,7 @@
         (mark-word)
         (setq begin (region-beginning)
               end (region-end))))
-    (message "searching for %s ..." (buffer-substring begin end))
+    (message "Searching for %s ..." (buffer-substring begin end))
     (let ((tooltip-frame-parameters '((name . "tooltip")
                                       (internal-border-width . 2)
                                       (border-width . 1)
