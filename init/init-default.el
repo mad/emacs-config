@@ -1,12 +1,16 @@
 (add-to-list 'load-path "~/.emacs.d/elisp/")
 (add-to-list 'load-path "~/.emacs.d/")
 
+(setq user-mail-address "owner.mad.epa@gmail.com")
+(setq user-full-name "Pavel Ershov")
+
 (server-start)
 
-(cond ((assoc-string system-name '(home home.mad localhost))
+(cond ((assoc-string system-name '(home mad.weba.ru home.mad localhost))
        (progn
-         (set-default-font "Monospace-12")
-         (add-to-list 'default-frame-alist '(font . "Monospace-12"))
+         ;; Default 10
+         (set-default-font "Monospace-10.2")
+         (add-to-list 'default-frame-alist '(font . "Monospace-10.2"))
          (setq initial-frame-alist default-frame-alist)
          (setq special-display-frame-alist default-frame-alist)))
       ((assoc-string system-name '(eeepc eeepc.mad))
@@ -40,7 +44,8 @@
          (set-default-font "Courier New-11"))))
 
 (scroll-bar-mode -1)
-(menu-bar-mode -1)
+;; ?
+;; (menu-bar-mode -1)
 (tool-bar-mode -1)
 (setq inhibit-startup-message t)
 (setq echo-keystrokes 0.01)
@@ -61,6 +66,7 @@
 (setq desktop-save t)
 (setq desktop-path '("~/"))
 (add-to-list 'desktop-locals-to-save 'buffer-file-coding-system)
+(desktop-read)
 
 (setq backup-by-copying t
       backup-directory-alist '(("." . "~/.saves"))
@@ -98,7 +104,17 @@
 (setq cua-enable-cua-keys nil)
 
 (recentf-mode)
-(global-set-key "\C-cr" 'recentf-open-files)
+
+(setq bookmark-save-flag 1)
+
+;; From emacs starter-kit
+(defun recentf-ido-find-file ()
+  "Find a recent file using ido."
+  (interactive)
+  (let ((file (ido-completing-read "Choose recent file: " recentf-list nil t)))
+    (when file
+      (find-file file))))
+(global-set-key "\C-cr" 'recentf-ido-find-file)
 (setq recentf-max-saved-items 200)
 
 (ido-mode t)
@@ -129,6 +145,20 @@
 
 (setq calendar-week-start-day 1)
 (setq european-calendar-style 't)
+
+;; OLD
+;;  (setq calendar-day-name-array
+;; ["Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday"])
+(setq calendar-day-name-array ["Воскресенье" "Понедельник" "Вторник"
+                               "Среда" "Четверг" "Пятница" "Суббота"])
+
+;; OLD
+;; (setq calendar-month-name-array
+;; ["January" "February" "March" "April" "May" "June" "July" "August"
+;; "September" "October" "November" "December"])
+(setq calendar-month-name-array ["Январь" "Февраль" "Март" "Апрель"
+                                 "Май" "Июнь" "Июль" "Август" "Сентябрь"
+                                 "Октябрь" "Ноябрь" "Декабрь"])
 
 ;; Hooks
 (add-hook 'before-save-hook 'delete-trailing-whitespace)

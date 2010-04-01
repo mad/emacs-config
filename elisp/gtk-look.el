@@ -1,9 +1,9 @@
 ;;; gtk-look.el --- lookup Gtk and Gnome documentation.
 
-;; Copyright 2004, 2006, 2007, 2008, 2009 Kevin Ryde
+;; Copyright 2004, 2006, 2007, 2008, 2009, 2010 Kevin Ryde
 
 ;; Author: Kevin Ryde <user42@zip.com.au>
-;; Version: 13
+;; Version: 18
 ;; Keywords: tools, c
 ;; URL: http://user42.tuxfamily.org/gtk-look/index.html
 ;; EmacsWiki: GtkLook
@@ -46,7 +46,7 @@
 ;;; Emacsen:
 
 ;; Designed for Emacs 21 and 22.  Works in XEmacs 21 if you copy
-;; `file-expand-wildcards' from Emacs and byte-compile to avoid slowness in
+;; `file-expand-wildcards' from Emacs, and byte-compile to avoid slowness in
 ;; the other compatibility code below.
 
 ;;; History:
@@ -68,10 +68,60 @@
 ;; Version 12 - propagate upper/lower case from gtk2-perl methods
 ;; Version 13 - avoid `with-auto-compression-mode' in Emacs 21 as it's buggy
 ;;              when byte compiled
+;; Version 14 - perl SomeNewClass->signal_query etc lookup method name alone
+;;            - fix infinite loop from symbol at point when at end of buffer,
+;;              as reported by Neil Roberts
+;; Version 15 - actually use gtk-lookup-assoc-string-ignore-case
+;; Version 16 - restore buffer and window if browse-url throws an error
+;; Version 17 - fix Gtk2::Gdk::GDK_FOO constants just Gtk2::GDK_FOO
+;; Version 18 - special case for Glib::ParamSpec->param_spec
 
 ;;; Code:
 
 (require 'browse-url)
+
+;;----------------------------------------------------------------------------
+;; emacs21 bugs
+
+(defmacro gtk-lookup--with-auto-compression (&rest body)
+  "Evaluate BODY forms with `auto-compression-mode' enabled.
+This is `with-auto-compression-mode', made available in XEmacs 21
+and workarounds in Emacs 21 (its `with-auto-compression-mode'
+doesn't work properly byte-compiled)."
+
+  (if (eval-when-compile
+        (and (fboundp 'with-auto-compression-mode)
+             (not (and (featurep 'emacs) ;; but no good in emacs21
+                       (= emacs-major-version 21)))))
+      ;; emacs22 up
+      `(with-auto-compression-mode ,@body)
+
+    ;; emacs21 has `with-auto-compression-mode', but it's buggy when byte
+    ;; compiled as it tries to call jka-compr-installed-p without loading
+    ;; jka-compr.el
+    ;;
+    ;; xemacs21 doesn't have `with-auto-compression-mode'.  It also doesn't
+    ;; have an `auto-compression-mode' variable (which emacs has) to get the
+    ;; current state, hence the use of the `jka-compr-installed-p' here.
+    ;;
+    `(let ((gtk-lookup--with-auto-compression--old-state
+            (and (fboundp 'jka-compr-installed-p) ;; if jka-compr loaded
+                 (jka-compr-installed-p))))
+
+       ;; turn on if not already on
+       ;; xemacs21 has a toggle-auto-compression which takes a "no message"
+       ;; arg, but not emacs21
+       (if (not gtk-lookup--with-auto-compression--old-state)
+           (auto-compression-mode 1))
+
+       (unwind-protect
+           (progn ,@body)
+         ;; turn off again if it was off before
+         (if (not gtk-lookup--with-auto-compression--old-state)
+             (auto-compression-mode -1))))))
+
+;;----------------------------------------------------------------------------
+;; variables
 
 ;;;###autoload
 (defgroup gtk-lookup nil
@@ -82,22 +132,8 @@
           :tag "gtk-look.el home page"
           "http://user42.tuxfamily.org/gtk-look/index.html"))
 
-(defvar gtk-lookup-cache 'uninitialized
-  "Cache of targets for `gtk-lookup-symbol'.
-The current format is (NAME . (BASE . LINK)), where NAME is a
-function or type string, and BASE and LINK will be concatenated
-to make a URL.  BASE and LINK are separate to save a little
-memory because the BASE part is shared by all the links in one
-manual.  Being an alist means this can be passed to
-`completing-read' and friends.
-
-If `gtk-lookup-cache' is not yet initialized the value is the
-symbol `uninitialized'.  `gtk-lookup-cache-init' should be used
-to ensure it's initialized.")
-
-(defvar gtk-lookup-history nil
-  "Symbols previously looked up with `gtk-lookup-symbol'.")
-
+;; must have gtk-lookup-reset ready for gtk-lookup-devhelp-indices initial
+;; :set to use
 (defun gtk-lookup-reset ()
   "Discard data cached for `gtk-lookup-symbol'.
 This can be used to get newly installed documents recognised."
@@ -113,7 +149,8 @@ This can be used to get newly installed documents recognised."
     "/usr/local/share/gtk-doc/html/*/*.devhelp*")
   "List of devhelp index files containing GTK/GNOME documentation.
 Shell wildcards like \"*.devhelp\" can be used, and gzip \".gz\"
-compressed files are allowed.
+compressed files are allowed (if you have gzip for
+`auto-compression-mode').
 
 Usually these files are under /usr/share/gtk-doc/html, and
 possibly /usr/local/share/gtk-doc.
@@ -128,42 +165,109 @@ the `customize' interface."
  :type '(repeat string)
  :group 'gtk-lookup)
 
+(defvar gtk-lookup-history nil
+  "Symbols previously looked up with `gtk-lookup-symbol'.")
 
-(defmacro gtk-lookup-with-auto-compression (&rest body)
-  "Evaluate BODY forms with `auto-compression-mode' enabled.
-`auto-compression-mode' is turned on if it isn't already then put
-back to its original setting when BODY returns.  The return value
-is the last form in BODY."
 
-  (if (eval-when-compile
-        (and (fboundp 'with-auto-compression-mode)
-             (not (string-match "^21\\." emacs-version)))) ;; not Emacs 21.x
-      ;; emacs22
-      `(with-auto-compression-mode ,@body)
+;;----------------------------------------------------------------------------
+;; generic
 
-    ;; emacs21 has `with-auto-compression-mode', but it's buggy when byte
-    ;; compiled as it tries to call jka-compr-installed-p without loading
-    ;; jka-compr.el
-    ;;
-    ;; xemacs21 doesn't have `with-auto-compression-mode'.  It also doesn't
-    ;; have an `auto-compression-mode' variable (which emacs has) to get the
-    ;; current state, hence the use of the `jka-compr-installed-p'.
-    ;;
-    `(let ((gtk-lookup-with-auto-compression--old-state
-            (and (fboundp 'jka-compr-installed-p) ;; if jka-compr loaded
-                 (jka-compr-installed-p))))
+(defun gtk-lookup-string-suffix-ci-p (suff str)
+  "Return true if string SUFF is a suffix of STR, ignoring case."
+  (and (>= (length str) (length suff))
+       (if (eval-when-compile (fboundp 'compare-strings)) ;; not in xemacs21
+           (eq t (compare-strings str (- (length str) (length suff)) nil
+                                  suff nil nil
+                                  t)) ;; ignore case
+         (setq suff (upcase suff))
+         (setq str (upcase str))
+         (string-equal suff
+                       (substring str (- (length str) (length suff)))))))
 
-       ;; turn on if not already on
-       ;; xemacs21 has a toggle-auto-compression which takes a "no message"
-       ;; arg, but not emacs21
-       (if (not gtk-lookup-with-auto-compression--old-state)
-           (auto-compression-mode 1))
+(defsubst gtk-lookup-assoc-string-ignore-case (key alist)
+  "Lookup a string KEY in ALIST, case insensitively."
+  (if (eval-when-compile (fboundp 'assoc-string))
+      (assoc-string key alist t)
+    (assoc-ignore-case key alist)))
 
-       (unwind-protect
-           (progn ,@body)
-         ;; turn off again if it was off before
-         (if (not gtk-lookup-with-auto-compression--old-state)
-             (auto-compression-mode -1))))))
+(defun gtk-lookup-browse-url-other-window (url)
+  "`browse-url' but in an \"other-window\" if it uses an Emacs window."
+
+  ;; this convoluted code copes with various types of browser that
+  ;; `browse-url' might invoke: perhaps an external program in its own X
+  ;; window, perhaps something in an emacs buffer.  And when in a buffer it
+  ;; might switch to an "other window" itself or just use the current
+  ;; window; and perhaps the current buffer (and window) is already the
+  ;; browser buffer
+  ;;
+  (interactive (browse-url-interactive-arg "URL: "))
+  (let ((orig-win-conf (current-window-configuration))
+        (orig-buffer   (current-buffer))
+        (orig-window   (selected-window)))
+    (unwind-protect
+        (with-temp-buffer
+          (let ((dummy-buf (current-buffer)))
+            (switch-to-buffer-other-window (current-buffer))
+            (let ((other-window (get-buffer-window dummy-buf)))
+              (select-window other-window)
+              (browse-url url)
+
+              (cond ((and (eq dummy-buf (window-buffer other-window))
+                          (eq orig-buffer (window-buffer orig-window)))
+                     ;; browse-url didn't touch the buffers, it left the
+                     ;; original and dummy current, so it's an external
+                     ;; window system program; let window configs go back
+                     ;; how they were
+                     )
+
+                    ((eq orig-buffer (window-buffer other-window))
+                     ;; browse-url has changed dummy-buf to orig-buf in the
+                     ;; other-window, which means we were in the browser
+                     ;; buffer already and shouldn't have split with "other
+                     ;; window"; so put window configs back how they were,
+                     ;; but don't change point in the browser buffer as
+                     ;; that's the new document position
+                     (let ((point (window-point other-window)))
+                       (set-window-configuration orig-win-conf)
+                       (setq orig-win-conf nil)
+                       (with-current-buffer orig-buffer
+                         (goto-char point))))
+
+                    (t
+                     ;; browse-url has selected a buffer; but it might have
+                     ;; done "other window" itself (eg. w3m-browse-url
+                     ;; does); don't let two "other window" invocations
+                     ;; leave our original buffer at the bottom and the
+                     ;; browser at the top, instead force our orig-window
+                     ;; back to orig-buffer, and let the other window we
+                     ;; made show the browser buffer
+                     (setq orig-win-conf nil)
+                     (let ((browser-buffer (window-buffer other-window)))
+                       (select-window other-window)
+                       (switch-to-buffer browser-buffer)
+                       (select-window orig-window)
+                       (switch-to-buffer orig-buffer)))))))
+
+      ;; restore windows for non-buffer browse-url or an error
+      (if orig-win-conf
+          (set-window-configuration orig-win-conf)))))
+
+
+;;----------------------------------------------------------------------------
+;; cached .devhelp file contents
+
+(defvar gtk-lookup-cache 'uninitialized
+  "Cache of targets for `gtk-lookup-symbol'.
+The current format is (NAME . (BASE . LINK)), where NAME is a
+function or type string, and BASE and LINK will be concatenated
+to make a URL.  BASE and LINK are separate to save a little
+memory because the BASE part is shared by all the links in one
+manual.  Being an alist means this can be passed to
+`completing-read' and friends.
+
+If `gtk-lookup-cache' is not yet initialized the value is the
+symbol `uninitialized'.  `gtk-lookup-cache-init' should be used
+to ensure it's initialized.")
 
 (defun gtk-lookup-cache-init ()
   "Initialize `gtk-lookup-cache', if not already done.
@@ -172,8 +276,9 @@ The return is the `gtk-lookup-cache' list."
     ;; build in `result' and only after that set gtk-lookup-cache, so as not
     ;; to leave a half built cache if killed (C-g) part-way through
     (let ((result nil)
-          (found nil))
-      (gtk-lookup-with-auto-compression
+          (found nil)
+          (case-fold-search nil))
+      (gtk-lookup--with-auto-compression
        (with-temp-buffer
          (let ((filelist
                 ;; `file-truename' here and `remove' below will eliminate
@@ -249,17 +354,9 @@ The return is the `gtk-lookup-cache' list."
       (setq gtk-lookup-cache result)))
   gtk-lookup-cache)
 
-(defun gtk-lookup-string-suffix-ci-p (suff str)
-  "Return true if string SUFF is a suffix of STR, ignoring case."
-  (and (>= (length str) (length suff))
-       (if (eval-when-compile (fboundp 'compare-strings)) ;; not in xemacs21
-           (eq t (compare-strings str (- (length str) (length suff)) nil
-                                  suff nil nil
-                                  t)) ;; ignore case
-         (setq suff (upcase suff))
-         (setq str (upcase str))
-         (string-equal suff
-                       (substring str (- (length str) (length suff)))))))
+
+;;-----------------------------------------------------------------------------
+;; symbol thing-at-point
 
 (defun gtk-lookup-symbol-method-candidates (method)
   "Return a list of Gtk symbols (strings) having METHOD as a suffix.
@@ -269,7 +366,8 @@ For example \"set_parent\" gives a list
 The method must match after a \"_\" separator, so for instance
 \"parent\" doesn't give \"gtk_widget_unparent\"."
 
-  (let ((ret (and (assoc-ignore-case method (gtk-lookup-cache-init))
+  (let ((ret (and (gtk-lookup-assoc-string-ignore-case
+                   method (gtk-lookup-cache-init))
                   (list method))))    ;; whole name if exists
     (setq method (concat "_" method)) ;; and otherwise at _ boundary
     (dolist (elem (gtk-lookup-cache-init) ret)
@@ -299,20 +397,23 @@ case-insensitive lookup by `completing-read' in
       (if (string-match "\\`Glib::\\(G_\\)" str)
           (setq str (replace-match "\\1" t nil str)))
 
-      ;; gtk2-perl "Gtk2::Gdk::GDK_PRIORITY_EVENTS" -> "GDK_PRIORITY_EVENTS",
-      ;; to avoid a doubling to "gdk_GDK_..."
-      (if (string-match "\\`Gtk2::Gdk::\\(GDK_\\)" str)
+      ;; gtk2-perl "Gtk2::GTK_PRIORITY_RESIZE" -> "GTK_PRIORITY_RESIZE", and
+      ;; "Gtk2::GDK_PRIORITY_EVENTS" -> "GDK_PRIORITY_EVENTS", to avoid a
+      ;; doubling to "gtk_GTK_..." or "gtk_GDK_..."
+      (if (string-match "\\`Gtk2::\\(G[DT]K_\\)" str)
           (setq str (replace-match "\\1" t nil str)))
 
-      ;; gtk2-perl "Gtk2::GTK_PRIORITY_RESIZE" -> "GTK_PRIORITY_RESIZE", to
-      ;; avoid a doubling to "gtk_GTK_..."
-      (if (string-match "\\`Gtk2::\\(GTK_\\)" str)
-          (setq str (replace-match "\\1" t nil str)))
+      ;; gtk2-perl "Glib::ParamSpec->param_spec" -> "g_param_spec_param", an
+      ;; inconsistency in the method naming
+      (if (equal "Glib::ParamSpec->param_spec" str)
+          (setq str "g_param_spec_param"))
 
       ;; gtk2-perl "Glib" -> "G"
       (if (string-match "\\`\\(Glib\\)\\(::\\|->\\)" str)
           (setq str (replace-match "G\\2" t nil str)))
       ;; gtk2-perl "Gtk2::Gdk", "Gtk2::Glade", "Gtk2::Pango" lose "Gtk2::" part
+      ;; (Gtk2::Pango has been renamed to just Pango, but keep it for
+      ;; compatibility)
       (if (string-match "\\`\\(Gtk2::\\)\\(Gdk\\|Glade\\|Pango\\)" str)
           (setq str (replace-match "\\2" t nil str)))
       ;; gtk2-perl "Gtk2" -> "Gtk", "Gnome2" -> "Gnome", losing the "2"
@@ -332,8 +433,8 @@ case-insensitive lookup by `completing-read' in
         (let ((alt (replace-match "G_TYPE_" t t str)))
           (setq str (replace-match "G_TYPE_g" t t str))
           (gtk-lookup-cache-init)
-          (and (not (assoc-ignore-case str gtk-lookup-cache))
-               (assoc-ignore-case alt gtk-lookup-cache)
+          (and (not (gtk-lookup-assoc-string-ignore-case str gtk-lookup-cache))
+               (gtk-lookup-assoc-string-ignore-case alt gtk-lookup-cache)
                (setq str alt))))
 
       (if (string-match "[_-]" str)
@@ -348,26 +449,42 @@ case-insensitive lookup by `completing-read' in
             (while (string-match "\\([A-Z]\\{2,\\}\\)\\([A-Z][a-z]\\)" str)
               (setq str (replace-match "\\1_\\2" t nil str)))
 
-            ;; gtk2-perl component separator "->" becomes "_"
-            ;; The upper/lower case of the PRE part is adjusted to follow
-            ;; the POST part.  This means Gtk2->check_version gives the
-            ;; function gtk_check_version() whereas Gtk2->CHECK_VERSION
-            ;; gives the macro GTK_CHECK_VERSION().  This only matters if an
-            ;; upper and a lower both exist, if there's just one the
-            ;; `assoc-ignore-case' lookup will go to the right place
-            ;; irrespective of mangling here.
-            (while (string-match "->" str)
+            ;; gtk2-perl "Foo->bar->quux" becomes quux, since can't know
+            ;; what class the bar() method returns
+            (when (string-match "->.*->" str)
+              (setq str (substring str (match-end 0))))
+
+            ;; gtk2-perl "::" separator becomes "_"
+            (while (string-match "::" str)
+              (setq str (replace-match "_" t t str)))
+
+            ;; gtk2-perl "Foo->bar" becomes "Foo_bar" if that's known, or
+            ;; "bar" if not.  Checking Foo is a known class allows for
+            ;; method calls on subclasses, eg.
+            ;; "MyNewClass->signal_add_emission_hook".
+            ;;
+            ;; The upper/lower case of the "Foo" PRE part is adjusted to
+            ;; follow the "bar" POST part.  This means Gtk2->check_version
+            ;; gives the function gtk_check_version() whereas
+            ;; Gtk2->CHECK_VERSION gives the macro GTK_CHECK_VERSION().
+            ;; If there's only one such function then this doesn't matter,
+            ;; the insensitive assoc in `gtk-lookup-symbol' will find it.
+            ;; But if there's both an upper and a lower like check_version
+            ;; then it should get the right one.
+            ;;
+            (when (string-match "->" str)
               (let ((pre  (substring str 0 (match-beginning 0)))
                     (post (substring str (match-end 0))))
                 (setq str (concat (if (string-match "\\`[a-z]" post)
                                       (downcase pre)
                                     (upcase pre))
-                                  "_" post))))
+                                  "_" post))
+                (gtk-lookup-cache-init)
+                (unless (gtk-lookup-assoc-string-ignore-case str gtk-lookup-cache)
+                  (setq str post))))
 
-            ;; other component separators become "_"
-            ;;    "-"   lisp
-            ;;    "::"  gtk2-perl
-            (while (string-match "-\\|::" str)
+            ;; lisp "-" becomes "_"
+            (while (string-match "-" str)
               (setq str (replace-match "_" t t str))))
 
         ;; one word class name
@@ -402,16 +519,19 @@ point is not at or within a symbol."
           (orig-point (point))
           (re "\\([A-Z][a-zA-Z0-9_:]*[a-zA-Z0-9_]->\\)?[a-zA-Z_][a-zA-Z0-9_:-]*[a-zA-Z0-9]\\|<[a-zA-Z0-9_-]+>"))
       (beginning-of-line)
-      (and (re-search-forward re nil t)
-           (progn
-             (while (< (match-end 0) orig-point)
-               (re-search-forward re nil t))
-             t)
-           (<= (match-beginning 0) orig-point)
-           (cons (match-beginning 0) (match-end 0))))))
+      (let (found)
+        (while (and (setq found (re-search-forward re nil t))
+                    (< (match-end 0) orig-point)))
+        (and found
+             (<= (match-beginning 0) orig-point)
+             (cons (match-beginning 0) (match-end 0)))))))
 
 (put 'gtk-lookup-symbol 'bounds-of-thing-at-point
      'gtk-lookup-symbol-bounds-of-thing-at-point)
+
+
+;;-----------------------------------------------------------------------------
+;; read and lookup
 
 (defvar gtk-lookup-initial-completion-list nil
   "Initial completions to display for `gtk-lookup-symbol-interactive-arg'.
@@ -511,63 +631,11 @@ URL `http://user42.tuxfamily.org/gtk-look/index.html'"
   (interactive (gtk-lookup-symbol-interactive-arg))
   (gtk-lookup-cache-init)
   (let ((entry (or (assoc symbol gtk-lookup-cache) ;; exact match preferred
-                   (assoc-ignore-case symbol gtk-lookup-cache))))
+                   (gtk-lookup-assoc-string-ignore-case
+                    symbol gtk-lookup-cache))))    ;; otherwise case-fold
     (or entry
         (error "Unknown symbol %s" symbol))
     (gtk-lookup-browse-url-other-window (concat (cadr entry) (cddr entry)))))
-
-(defun gtk-lookup-browse-url-other-window (url)
-  "`browse-url' but in an \"other-window\" if it uses an Emacs window."
-
-  ;; this convoluted code divines the type of browser `browse-url' invokes:
-  ;; perhaps an external program in its own X window, perhaps something in
-  ;; an emacs buffer.  And when in a buffer it might switch to an "other
-  ;; window" itself or just use the current window; and perhaps the current
-  ;; buffer (and window) is already the browser buffer
-  ;;
-  (interactive (browse-url-interactive-arg "URL: "))
-  (let ((orig-win-conf (current-window-configuration))
-        (orig-buffer   (current-buffer))
-        (orig-window   (selected-window))
-        (dummy-buf     (get-buffer-create
-                        "*gtk-lookup-browse-url-other-window--dummy-buffer*")))
-    (switch-to-buffer-other-window dummy-buf)
-    (let ((other-window (get-buffer-window dummy-buf)))
-      (select-window other-window)
-      (browse-url url)
-
-      (cond ((and (eq dummy-buf (window-buffer other-window))
-                  (eq orig-buffer (window-buffer orig-window)))
-             ;; browse-url didn't touch the buffers, it left the original
-             ;; and dummy current, so it's an external window system
-             ;; program; put window configs all back how they were
-             (set-window-configuration orig-win-conf))
-
-            ((eq orig-buffer (window-buffer other-window))
-             ;; browse-url has changed dummy-buf to orig-buf in the
-             ;; other-window, which means we were in the browser buffer
-             ;; already and shouldn't have split with "other window"; so put
-             ;; window configs back how they were, but don't change point in
-             ;; the browser buffer as that's the new document position
-             (let ((point (window-point other-window)))
-               (set-window-configuration orig-win-conf)
-               (with-current-buffer orig-buffer
-                 (goto-char point))))
-
-            (t
-             ;; browse-url has selected a buffer; but it might have done
-             ;; "other window" itself (eg. w3m-browse-url does); don't let
-             ;; two "other window" invocations leave our original buffer
-             ;; at the bottom and the browser at the top, instead force
-             ;; our orig-window back to orig-buffer, and let the other
-             ;; window we made show the browser buffer
-             (let ((browser-buffer (window-buffer other-window)))
-               (select-window other-window)
-               (switch-to-buffer browser-buffer)
-               (select-window orig-window)
-               (switch-to-buffer orig-buffer)))))
-
-    (kill-buffer dummy-buf)))
 
 (provide 'gtk-look)
 

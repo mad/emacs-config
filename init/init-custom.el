@@ -92,6 +92,12 @@
   (find-file "~/.emacs.d/init.el"))
 (global-set-key (kbd "C-8")  'edit-dot-emacs)
 
+(defun edit-init-emacs ()
+  (interactive)
+  (ido-file-internal ido-default-file-method 'find-file  "~/.emacs.d/init"))
+
+(global-set-key (kbd "C-9")  'edit-init-emacs)
+
 ;; split window and run shell
 ;; (defun set-shell()
 ;;   (interactive)
@@ -198,3 +204,7 @@ If ARG not set, take imediately"
       (setq res (match-string 1))
       (kill-buffer "*Shell Command Output*") res)))
 
+;; From http://www.emacswiki.org/emacs/misc-cmds.el
+(defun revert-buffer-no-confirm ()
+  "Revert buffer without confirmation."
+  (interactive) (revert-buffer t t))

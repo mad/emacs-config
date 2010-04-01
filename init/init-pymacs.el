@@ -6,4 +6,3 @@
 (pymacs-load "ropemacs" "rope-")
 (setq ropemacs-enable-autoimport t)
 (add-hook 'python-mode-hook 'ropemacs-mode)
-

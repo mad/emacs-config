@@ -8,6 +8,8 @@
                (0.22151898734177214 . 0.30434782608695654)
                (0.22151898734177214 . 0.17391304347826086)))))
 
+(setq ecb-auto-update-methods-after-save t)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

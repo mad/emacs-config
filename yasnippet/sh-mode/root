@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: root
+# --
+
+if [ \`whoami\` != "root" ]; then
+    echo -e "you must be root"
+    exit
+fi

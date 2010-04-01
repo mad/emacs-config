@@ -12,3 +12,4 @@ frequencies
 init.el.old
 miniinit.el
 elpa/*
+/update-gtk-look

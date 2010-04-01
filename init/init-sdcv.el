@@ -16,10 +16,13 @@
     (let ((tooltip-frame-parameters '((name . "tooltip")
                                       (internal-border-width . 2)
                                       (border-width . 1)
-                                      (top . 300))))
+                                      (top . 300)
+                                      (left . 300))))
       (tooltip-show
        (shell-command-to-string
         (concat "sdcv -n \""
                 (replace-regexp-in-string "\"" "\\\\\"" (buffer-substring begin end)) "\""))))))
 
-(global-set-key (kbd "C-c d") 'my-star-dict)
+(require 'sdcv)
+
+(global-set-key (kbd "C-c d") 'sdcv-search-input)

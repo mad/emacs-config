@@ -16,13 +16,14 @@
 (fset 'kadb 'kill-all-dired-buffers)
 
 (defun dired-show-only (&optional regexp)
+  "Show only unhiden file (.*)"
   (interactive)
   (dired-mark-files-regexp (or regexp "^[^\.]"))
   (dired-toggle-marks)
   (dired-do-kill-lines))
 (define-key dired-mode-map "\C-ch" 'dired-show-only)
-(defvar dired-sort-map (make-sparse-keymap))
 
+(defvar dired-sort-map (make-sparse-keymap))
 (define-key dired-mode-map "s" dired-sort-map)
 
 (define-key dired-sort-map "s"

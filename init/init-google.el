@@ -14,7 +14,9 @@
         ("^msdn:? +\\(.*\\)" . ;; Msdn
          "http://social.msdn.microsoft.com/Search/en-US/?query=\\1")
         ("^cpp:? +\\(.*\\)" .  ;; C reference
-         "http://www.cplusplus.com/query/search.cgi?q=")))
+         "http://www.cplusplus.com/query/search.cgi?q=\\1")
+        ("^w:? +\\(.*\\)" .    ;; Wiki
+         "http://en.wikipedia.org/wiki/\\1")))
 
 (defun google-get-history-search (&optional arg)
   "Getting search history from google service.

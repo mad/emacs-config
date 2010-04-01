@@ -28,7 +28,7 @@
                                    "-adobe-times-medium-r-normal--34-240-100-100-p-170-iso8859-1"))
           (osd-show-string notify-msg)))))
 
-;;(remove-hook 'jabber-alert-message-hooks 'jabber-message-osd)
+;; (add-hook 'jabber-alert-message-hooks 'jabber-message-osd)
 
 (define-key jabber-chat-mode-map "\C-ct"
   '(lambda()

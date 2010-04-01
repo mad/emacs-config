@@ -15,8 +15,7 @@
   (local-set-key "\C-x \C-j" 'eval-print-last-sexp)
   (local-set-key "\r" 'reindent-then-newline-and-indent)
   (local-set-key "\M-." 'find-function)
-  (local-set-key "\C-c;" 'comment-region)
-  (local-set-key "\C-c:" 'uncomment-region)
+  (local-set-key "\C-c;" 'comment-or-uncomment-region)
   (eldoc-mode))
 (add-hook 'emacs-lisp-mode-hook 'my-elisp-mode-hook)
 
