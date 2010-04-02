@@ -16,18 +16,6 @@ make
 ln -s $CVS_PATH/auctex $EMACS_DIR/auctex
 
 cd $CVS_PATH
-cvs -z9 -d :pserver:anonymous@cvs.m17n.org:/cvs/root checkout apel
-cd apel
-make
-ln -s $CVS_PATH/apel $EMACS_DIR/apel
-
-cd $CVS_PATH
-cvs -z3 -d:pserver:anonymous@cedet.cvs.sourceforge.net:/cvsroot/cedet co -P cedet
-cd cedet
-make
-ln -s $CVS_PATH/cedet $EMACS_DIR/cedet
-
-cd $CVS_PATH
 cvs -z3 -d:pserver:anonymous@ecb.cvs.sourceforge.net:/cvsroot/ecb co ecb
 cd ecb
 make
@@ -79,8 +67,14 @@ ln -s $GIT_PATH/slackware-el/slackware-changelog.el $EMACS_DIR/slackware-changel
 cd $GIT_PATH
 git clone http://git.busydoingnothing.co.uk/cgit.cgi/twitter.git
 ln -s $GIT_PATH/twitter/twitter.el $EMACS_DIR/twitter.el
-git clone git://github.com/hayamiz/twittering-mode.git
 
+cd $GIT_PATH
+git clone git://github.com/hayamiz/twittering-mode.git
+ln -s $GIT_PATH/twittering-mode/twittering-mode.el $EMACS_DIR/twittering-mode.el
+
+cd $GIT_PATH
+git clone git://github.com/mad/weather.el
+ln -s $GIT_PATH/weather/weather.el $EMACS_DIR/weather.el
 
 ## SVN
 cd $SVN_PATH
@@ -91,9 +85,3 @@ cd $SVN_PATH
 svn checkout http://js2-mode.googlecode.com/svn/trunk/ js2-mode-read-only
 ln -s $SVN_PATH/js2-mode-read-only/js2-build.el $EMACS_DIR/js2-build.el
 
-cd $EMACS_DIR/
-mkdir company
-wget http://nschum.de/src/emacs/company-mode/company-0.4.3.tar.bz2
-tar xjf company-0.4.3.tar.bz2
-mv *.el company
-rm -rf company-0.4.3.tar.bz2

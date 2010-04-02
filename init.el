@@ -1,19 +1,18 @@
-;;; Time-stamp: "2010-04-01 23:39:32 mad"
+;;; Time-stamp: "2010-04-02 23:39:12 mad"
 ;;; GNU Emacs 23.1.1 (i686-pc-linux-gnu, GTK+ Version 2.14.7)
 ;;; of 2009-08-02 on home
 
 ;; This config files depend on:
 
-;; `actionscript-mode' `analog-clock' `anything' `apel'
-;; `auto-complete' `autocompletion-php-functions' `bison-mode' `bm'
-;; `c-eldoc' `codepad' `color-theme-autoloads' `color-theme'
-;; `column-marker' `company' `ecb' `elscreen' `emacs-rc-auto-insert'
-;; `emms' `etach' `etags-select' `festival' `flex-mode'
-;; `flymake-shell' `folding' `gist' `google-translate'
-;; `graphviz-dot-mode' `gtags' `gtk-look' `haxe-mode' `header2'
-;; `hfy-cmap' `htmlfontify' `htmlize' `http-post-simple'
-;; `http-twiddle' `identica-mode' `irfc' `jabber' `js2-mode'
-;; `js2-mode.elc' `juick-el' `lua-mode' `magit' `magit.elc'
+;; `actionscript-mode' `analog-clock' `anything' `auto-complete'
+;; `autocompletion-php-functions' `bison-mode' `bm' `c-eldoc'
+;; `codepad' `color-theme-autoloads' `color-theme' `column-marker'
+;; `company' `ecb' `elscreen' `emacs-rc-auto-insert' `emms' `etach'
+;; `etags-select' `festival' `flex-mode' `flymake-shell' `folding'
+;; `gist' `google-translate' `graphviz-dot-mode' `gtags' `gtk-look'
+;; `haxe-mode' `header2' `hfy-cmap' `htmlfontify' `htmlize'
+;; `http-post-simple' `http-twiddle' `identica-mode' `irfc' `jabber'
+;; `js2-mode' `js2-mode.elc' `juick-el' `lua-mode' `magit' `magit.elc'
 ;; `make-regexp' `markdown-mode' `mutt-ed' `muttrc-mode' `osd'
 ;; `pastebin' `php-mode' `prolog' `py-complete' `rfc' `sdcv' `showtip'
 ;; `slackware-changelog' `slime' `sr-speedbar' `tex-site'
