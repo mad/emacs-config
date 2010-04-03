@@ -9,7 +9,7 @@
 	url = git://catap.ru/emacs-jabber/emacs-jabber.git
 [submodule "elisp/juick-el"]
 	path = elisp/juick-el
-	url = git@github.com:mad/emacs-juick-el.git
+	url = git://github.com/mad/emacs-juick-el.git
 [submodule "elisp/magit"]
 	path = elisp/magit
 	url = git://gitorious.org/magit/mainline.git
@@ -18,7 +18,7 @@
 	url = git://jblevins.org/git/markdown-mode.git
 [submodule "elisp/slackware-el"]
 	path = elisp/slackware-el
-	url = git@github.com:mad/slackware-el.git
+	url = git://github.com/mad/slackware-el.git
 [submodule "elisp/twitter"]
 	path = elisp/twitter
 	url = http://git.busydoingnothing.co.uk/cgit.cgi/twitter.git
@@ -33,7 +33,7 @@
 	url = git://github.com/defunkt/gist.el.git
 [submodule "elisp/vkontakte-el"]
 	path = elisp/vkontakte-el
-	url = git@github.com:mad/vkontakte-el.git
+	url = git://github.com/mad/vkontakte-el.git
 [submodule "elisp/ecb"]
 	path = elisp/ecb
 	url = git://github.com/emacsmirror/ecb.git
