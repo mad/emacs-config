@@ -1,0 +1,3 @@
+[submodule "elisp/emms"]
+	   path = elisp/emms
+	   url = git://git.sv.gnu.org/emms.git
