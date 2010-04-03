@@ -46,3 +46,6 @@
 [submodule "elisp/yasnippet"]
 	path = elisp/yasnippet
 	url = git://github.com/emacsmirror/yasnippet.git
+[submodule "elisp/gist.el"]
+	path = elisp/gist.el
+	url = git://github.com/defunkt/gist.el.git

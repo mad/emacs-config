@@ -1,4 +1,4 @@
-(add-to-list 'load-path "~/.emacs.d/elisp/emms")
+(add-to-list 'load-path "~/.emacs.d/elisp/emms/lisp")
 
 (require 'emms-setup)
 (require 'emms-player-mplayer)

@@ -1,3 +1,6 @@
+(add-to-list 'load-path "~/.emacs.d/elisp/auctex")
+(add-to-list 'load-path "~/.emacs.d/elisp/auctex/preview/")
+
 (load "auctex.el" nil t t)
 (load "preview-latex.el" nil t t)
 
