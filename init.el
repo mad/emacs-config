@@ -1,4 +1,4 @@
-;;; Time-stamp: "2010-04-02 23:39:12 mad"
+;;; Time-stamp: "2010-04-03 19:28:08 mad"
 ;;; GNU Emacs 23.1.1 (i686-pc-linux-gnu, GTK+ Version 2.14.7)
 ;;; of 2009-08-02 on home
 
@@ -16,9 +16,10 @@
 ;; `make-regexp' `markdown-mode' `mutt-ed' `muttrc-mode' `osd'
 ;; `pastebin' `php-mode' `prolog' `py-complete' `rfc' `sdcv' `showtip'
 ;; `slackware-changelog' `slime' `sr-speedbar' `tex-site'
-;; `textile-minor-mode' `themes' `turing' `turing_2' `twitter'
+;; `textile-minor-mode' `turing' `turing_2' `twitter'
 ;; `twittering-mode' `typing-speed' `vline' `w3m-session' `weather'
 ;; `yasnippet'
+;; from ~/.emacs.d/elisp dir
 
 (add-to-list 'load-path "~/.emacs.d/init")
 
@@ -38,7 +39,7 @@
 (load "init-as")
 
 (load "init-cedet")
-;; New emacs
+;; New emacs (maybe remove from repo?)
 ;; (load "init-ecb")
 (load "init-yasnippet")
 (load "init-flymake")
@@ -50,12 +51,11 @@
 (load "init-ediff")
 (load "init-magit")
 (load "init-sr-speedbar")
-;; Not used
-;;(load "init-company")
+;; Not used (maybe remove from repo?)
+;; (load "init-company")
 (load "init-bm")
 
 (load "init-org")
-(load "init-ditta")
 (load "init-dired")
 (load "init-elscreen")
 (load "init-irfc")
@@ -68,7 +68,7 @@
 (load "init-emms")
 (load "init-jabber")
 (load "init-juick")
-(load ".gnus.el")
+(load "init-gnus")
 (load "init-twitter")
 (load "init-identica")
 (load "init-vkontakte")

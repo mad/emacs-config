@@ -1,1 +1,0 @@
-/home/mad/git/twitter/twitter.el

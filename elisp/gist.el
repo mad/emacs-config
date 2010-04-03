@@ -1,1 +1,0 @@
-/home/mad/git/gist.el/gist.el

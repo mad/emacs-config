@@ -1,1 +1,0 @@
-/home/mad/git/identica-mode/identica-mode.el

@@ -36,9 +36,8 @@
 ;; I`m not use it
 ;;(global-ede-mode t)
 
-
 ;;
-(load "~/cvs/cedet/contrib/eassist.el" t t)
+(load "eassist.el" t t)
 
 (defun my-cedet-hook ()
   (local-set-key "\C-ci" 'semantic-ia-complete-symbol-menu)

@@ -1,1 +1,0 @@
-/home/mad/git/slackware-el/slackware-changelog.el
