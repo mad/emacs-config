@@ -1,4 +1,4 @@
-;;; Time-stamp: "2010-04-03 19:28:08 mad"
+;;; Time-stamp: "2010-04-07 23:43:09 mad"
 ;;; GNU Emacs 23.1.1 (i686-pc-linux-gnu, GTK+ Version 2.14.7)
 ;;; of 2009-08-02 on home
 
@@ -37,6 +37,7 @@
 (load "init-php")
 (load "init-prolog")
 (load "init-as")
+(load "init-perl")
 
 (load "init-cedet")
 ;; New emacs (maybe remove from repo?)

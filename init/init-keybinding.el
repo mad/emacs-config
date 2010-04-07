@@ -2,7 +2,7 @@
 (global-set-key "\C-c\C-u" 'browse-url-at-point)
 ;;; Conflict with elscreen
 ;; (global-set-key "\C-z" nil)
-(global-set-key "\C-xh" nil)
+(global-set-key "\C-xh" 'mark-whole-buffer)
 (global-set-key "\C-x\C-d" 'dired)
 (global-set-key "\C-xd" 'dired)
 (global-set-key [(pause)] 'remember)
