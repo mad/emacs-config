@@ -1,3 +1,4 @@
+(require 'cperl-mode)
 (defalias 'perl-mode 'cperl-mode)
 
 (setq cperl-hairy t)
@@ -13,7 +14,7 @@
   (let ((start (mark))
         (end   (point))
         (shell-command-default-error-buffer "perltidy-errors")
-        (command "perltidy -q"))
+        (command "perltidy -q -lp -cti=1"))
     (shell-command-on-region start end command t t
                              shell-command-default-error-buffer)))
 

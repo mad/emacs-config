@@ -28,7 +28,21 @@
                                    "-adobe-times-medium-r-normal--34-240-100-100-p-170-iso8859-1"))
           (osd-show-string notify-msg)))))
 
-;; (add-hook 'jabber-alert-message-hooks 'jabber-message-osd)
+(defun jabber-message-notify (from buffer text proposed-alert)
+  "Display a message using the osd_cat program."
+  (let ((jid (substring from 0 (string-match "/" from))))
+    (if (not (string-match jid (buffer-name (window-buffer (selected-window)))))
+        (let* ((notify-msg (concat "Message from "
+                                   (substring jid 0 (string-match "@" jid))))
+               (offset (number-to-string (- 500 (* (length notify-msg) 4)))))
+          (jabber-libnotify-message notify-msg)))))
+
+(require 'jabber-libnotify)
+(setq jabber-libnotify-icon "/usr/share/icons/hicolor/128x128/apps/emacs.png")
+(setq jabber-libnotify-timeout 10000)
+
+(add-hook 'jabber-alert-message-hooks 'jabber-message-notify)
+(add-hook 'jabber-chat-mode-hook 'auto-fill-mode)
 
 (define-key jabber-chat-mode-map "\C-ct"
   '(lambda()

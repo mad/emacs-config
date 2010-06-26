@@ -51,6 +51,7 @@
 (define-trivial-mode "mplayer" "\\.mp3$")
 (define-trivial-mode "ods" "\\.ods$" "oocalc")
 (define-trivial-mode "swriter" "\\.doc$")
+(define-trivial-mode "swriter" "\\.DOC$")
 
 ;; Use M-backspace or C-backspace for kill word
 (defun my-delete-word-or-kill-region (arg)
