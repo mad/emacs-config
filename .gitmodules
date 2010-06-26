@@ -1,51 +1,68 @@
 [submodule "elisp/emms"]
+        update = merge
 	path = elisp/emms
 	url = git://git.sv.gnu.org/emms.git
 [submodule "elisp/identica-mode"]
+        update = merge
 	path = elisp/identica-mode
 	url = http://git.savannah.gnu.org/cgit/identica-mode.git
 [submodule "elisp/jabber"]
+        update = merge
 	path = elisp/jabber
 	url = git://catap.ru/emacs-jabber/emacs-jabber.git
 [submodule "elisp/juick-el"]
+        update = merge
 	path = elisp/juick-el
 	url = git://github.com/mad/emacs-juick-el.git
 [submodule "elisp/magit"]
+        update = merge
 	path = elisp/magit
 	url = git://gitorious.org/magit/mainline.git
 [submodule "elisp/markdown-mode"]
+        update = merge
 	path = elisp/markdown-mode
 	url = git://jblevins.org/git/markdown-mode.git
 [submodule "elisp/slackware-el"]
+        update = merge
 	path = elisp/slackware-el
 	url = git://github.com/mad/slackware-el.git
 [submodule "elisp/twitter"]
+        update = merge
 	path = elisp/twitter
 	url = http://git.busydoingnothing.co.uk/cgit.cgi/twitter.git
 [submodule "elisp/twittering-mode"]
+        update = merge
 	path = elisp/twittering-mode
 	url = git://github.com/hayamiz/twittering-mode.git
 [submodule "elisp/weather"]
+        update = merge
 	path = elisp/weather
 	url = git://github.com/mad/weather.el
 [submodule "elisp/gits.el"]
+        update = merge
 	path = elisp/gits.el
 	url = git://github.com/defunkt/gist.el.git
 [submodule "elisp/vkontakte-el"]
+        update = merge
 	path = elisp/vkontakte-el
 	url = git://github.com/mad/vkontakte-el.git
 [submodule "elisp/ecb"]
+        update = merge
 	path = elisp/ecb
 	url = git://github.com/emacsmirror/ecb.git
 [submodule "elisp/apel"]
+        update = merge
 	path = elisp/apel
 	url = http://github.com/emacsmirror/apel.git
 [submodule "elisp/auctex"]
+        update = merge
 	path = elisp/auctex
 	url = http://github.com/emacsmirror/auctex.git
 [submodule "elisp/yasnippet"]
+        update = merge
 	path = elisp/yasnippet
 	url = git://github.com/emacsmirror/yasnippet.git
 [submodule "elisp/gist.el"]
+        update = merge
 	path = elisp/gist.el
 	url = git://github.com/defunkt/gist.el.git
