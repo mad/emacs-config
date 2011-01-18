@@ -66,3 +66,6 @@
         update = merge
 	path = elisp/gist.el
 	url = git://github.com/defunkt/gist.el.git
+[submodule "elisp/ahg"]
+	path = elisp/ahg
+	url = https://github.com/emacsmirror/ahg.git

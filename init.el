@@ -1,25 +1,24 @@
-;;; Time-stamp: "2010-04-07 23:43:09 mad"
+;;; Time-stamp: "2011-01-18 03:18:53 mad"
 ;;; GNU Emacs 23.1.1 (i686-pc-linux-gnu, GTK+ Version 2.14.7)
 ;;; of 2009-08-02 on home
 
 ;; This config files depend on:
 
-;; `actionscript-mode' `analog-clock' `anything' `auto-complete'
-;; `autocompletion-php-functions' `bison-mode' `bm' `c-eldoc'
-;; `codepad' `color-theme-autoloads' `color-theme' `column-marker'
-;; `company' `ecb' `elscreen' `emacs-rc-auto-insert' `emms' `etach'
-;; `etags-select' `festival' `flex-mode' `flymake-shell' `folding'
-;; `gist' `google-translate' `graphviz-dot-mode' `gtags' `gtk-look'
-;; `haxe-mode' `header2' `hfy-cmap' `htmlfontify' `htmlize'
-;; `http-post-simple' `http-twiddle' `identica-mode' `irfc' `jabber'
-;; `js2-mode' `js2-mode.elc' `juick-el' `lua-mode' `magit' `magit.elc'
-;; `make-regexp' `markdown-mode' `mutt-ed' `muttrc-mode' `osd'
-;; `pastebin' `php-mode' `prolog' `py-complete' `rfc' `sdcv' `showtip'
-;; `slackware-changelog' `slime' `sr-speedbar' `tex-site'
-;; `textile-minor-mode' `turing' `turing_2' `twitter'
-;; `twittering-mode' `typing-speed' `vline' `w3m-session' `weather'
-;; `yasnippet'
-;; from ~/.emacs.d/elisp dir
+;; `actionscript-mode' `bison-mode' `bm' `cc-mode' `cedet'
+;; `semantic-decorate-include' `semantic-gcc' `semantic-ia' `eassist'
+;; `semanticdb-global' `semanticdb-ectag' `company' `color-theme' `desktop'
+;; `uniquify' `tramp' `saveplace' `jit-lock' `dired' `ecb' `emms-setup'
+;; `emms-player-mplayer' `flex-mode' `gtags' `gtk-look' `identica-mode'
+;; `irfc' `jabber' `jabber-libnotify' `juick' `magit' `muttrc-mode' `osd'
+;; `pastebin' `cperl-mode' `c-eldoc' `skeleton' `prolog' `pymacs' `sdcv'
+;; `slackware-changelog' `sr-speedbar' `twitter' `vkontakte' `w3m-load'
+;; `mime-w3m' `weather' `yasnippet' `dropdown-list' `zencoding-mode'
+;; From:
+;; FIXME: load-file, load too use
+;; egrep  -o "\(require '(.*)\)" ~/.emacs.d/init/* | \
+;;     sed "s/.*'\(.*\))/\`\1'/"                   | \
+;;     fmt                                         | \
+;;     xsel -b
 
 (add-to-list 'load-path "~/.emacs.d/init")
 
@@ -51,6 +50,7 @@
 (load "init-diff")
 (load "init-ediff")
 (load "init-magit")
+(load "init-ahg")
 (load "init-sr-speedbar")
 ;; Not used (maybe remove from repo?)
 ;; (load "init-company")
