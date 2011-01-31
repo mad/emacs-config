@@ -187,7 +187,7 @@ If ARG not set, take imediately"
                          '(lambda()
                             ;; -geometry 1024x768
                             (shell-command "import -window root ~/screen.png")
-                            (if (y-or-no-p "Upload screen ? ")
+                            (if (y-or-n-p "Upload screen ? ")
                                 (browse-url (upload-image "~/screen.png"))
                               (browse-url "~/screen.png"))))))
 (global-set-key [print] 'take-screenshot-delayed)

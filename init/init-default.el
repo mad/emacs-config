@@ -62,11 +62,15 @@
                mode-line-buffer-identification))
 
 (require 'desktop)
-;;(desktop-save-mode)
+(desktop-save-mode t)
 (setq desktop-save t)
 (setq desktop-path '("~/"))
 (add-to-list 'desktop-locals-to-save 'buffer-file-coding-system)
-(desktop-read)
+;; Can be switched off with (cancel-timer desktop-saver-timer)
+(add-hook 'after-init-hook
+          (lambda ()
+            (setq desktop-saver-timer
+                  (run-with-timer 5 300 'desktop-save-in-desktop-dir))))
 
 (setq backup-by-copying t
       backup-directory-alist '(("." . "~/.saves"))

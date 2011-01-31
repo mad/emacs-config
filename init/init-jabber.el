@@ -49,3 +49,8 @@
      (interactive)
      (save-excursion
        (tiny-url-replace jabber-point-insert))))
+
+(setq jabber-socks5-proxies '("proxy.miranda.im"))
+
+;; (when (get-process "jabber")
+;;   (process-send-eof "socks5"))

@@ -9,7 +9,7 @@
   ;;                       emms-player-lastfm-radio))
 (setq  emms-info-asynchronously t
        later-do-interval 0.0001
-       emms-source-file-default-directory "/home/disk/music/"
+       emms-source-file-default-directory "/pub/disk/music/"
        emms-repeat-playlist t
        emms-mode-line-titlebar-function 'emms-mode-line-playlist-current
        emms-player-mpg321-parameters '("-o" "alsa")
@@ -21,18 +21,21 @@
 (add-to-list 'emms-info-functions 'emms-info-ogginfo)
 
 (defvar my-emms-playlists
-  '(("default" . "/home/disk/music/default")
+  '(;; ("default" . "/pub/disk/music/default")
     ;; not resolved
-    ;;("stream radio" . "http://89.179.242.149:9000")
-    ("old dnb" . "/home/disk/music/dnb.p")
-    ("dnb" . "/pub/disk/dnb-t.epl")))
+    ;; ("stream radio" . "http://89.179.242.149:9000")
+    ;; ("old dnb" . "/home/disk/music/dnb.p")
+    ("harder-rautemusik" . "http://harder-high.rautemusik.fm/listen.pls")
+    ("dnb" . "/pub/disk/music/dnb-all.epl")))
 
 (defun my-emms-playlist-select ()
   (interactive)
-  (emms-play-playlist
-   (assoc-default
-    (completing-read "Select playlist: " my-emms-playlists nil t)
-    my-emms-playlists nil "dnb")))
+  (let ((playlist (assoc-default
+                   (completing-read "Select playlist: " my-emms-playlists nil t)
+                   my-emms-playlists nil "dnb")))
+    (if (string-match-p "^http://" playlist)
+        (emms-play-url playlist)
+      (emms-play-playlist playlist))))
 
 ;; FIXME: THIS HOTKEY NOT WORK ON CONSOLE VERSION EMACS
 (global-set-key (kbd "<XF86Tools>") 'my-emms-playlist-select)
