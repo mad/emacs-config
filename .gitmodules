@@ -26,10 +26,6 @@
         update = merge
 	path = elisp/slackware-el
 	url = git://github.com/mad/slackware-el.git
-[submodule "elisp/twitter"]
-        update = merge
-	path = elisp/twitter
-	url = http://git.busydoingnothing.co.uk/cgit.cgi/twitter.git
 [submodule "elisp/twittering-mode"]
         update = merge
 	path = elisp/twittering-mode
