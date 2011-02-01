@@ -6,7 +6,7 @@
                 java-mode
                 cperl-mode
                 html-mode-hook
-                shell-script-mode
+                sh-mode
                 css-mode-hook
                 emacs-lisp-mode))
   ;; highlight additional keywords

@@ -35,3 +35,11 @@
             (set (make-local-variable 'eldoc-documentation-function)
                  'my-cperl-eldoc-documentation-function)))
 (add-hook 'cperl-mode-hook 'eldoc-mode)
+
+(defun perltidy-whole ()
+  (interactive)
+  (let ((current-point (point)))
+    (save-excursion
+      (mark-whole-buffer)
+      (perltidy-region))
+    (goto-char current-point)))
