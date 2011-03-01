@@ -5,3 +5,5 @@
 (setq php-manual-url "http://www.php.net/manual/ru/")
 (setq php-mode-force-pear 1)
 
+(modify-syntax-entry ?\# "< b" php-mode-syntax-table)
+(modify-syntax-entry ?\n "> b" php-mode-syntax-table)
