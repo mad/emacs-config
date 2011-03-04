@@ -1,3 +1,6 @@
+# -*- mode: snippet -*-
+# name: report
+# --
 \documentclass[12pt]{article}
 \usepackage[english,russian]{babel}
 \usepackage[utf8]{inputenc}
@@ -42,7 +45,7 @@
       \begin{flushright} \large
         \begin{tabular}{ll}
           Студент: & Ершов П.А.\\\\
-          Группа: & ${4:4}088/1 \\\\
+          Группа: & ${4:5}088/1 \\\\
           Преподаватель: & ${5:Препод}\\\\
         \end{tabular}
       \end{flushright}
@@ -57,10 +60,11 @@
 
 \section{ФОРМУЛИРОВКА ЗАДАНИЯ}
 $0
-\section{ИСПОЛЬЗОВАННЫЕ ТЕОРЕТИЧЕСКИЕ СВЕДЕНИЯ}
-\section{ХОД РАБОТЫ}
-\section{РЕЗУЛЬТАТЫ РАБОТЫ}
+
+\section{ВЫПОЛНЕННАЯ РАБОТА}
+
 \section{ВЫВОД}
+
 \newpage
 \begin{flushright}
   \textbf{\textit{Приложение}} \\\\
