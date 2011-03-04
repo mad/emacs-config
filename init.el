@@ -1,4 +1,4 @@
-;;; Time-stamp: "2011-01-18 03:18:53 mad"
+;;; Time-stamp: "2011-03-04 22:23:53 mad"
 ;;; GNU Emacs 23.1.1 (i686-pc-linux-gnu, GTK+ Version 2.14.7)
 ;;; of 2009-08-02 on home
 
@@ -39,7 +39,7 @@
 (load "init-perl")
 
 (load "init-cedet")
-;; New emacs (maybe remove from repo?)
+;; XXX: Not used
 ;; (load "init-ecb")
 (load "init-yasnippet")
 (load "init-flymake")
@@ -52,7 +52,7 @@
 (load "init-magit")
 (load "init-ahg")
 (load "init-sr-speedbar")
-;; Not used (maybe remove from repo?)
+;; XXX: Not used
 ;; (load "init-company")
 (load "init-bm")
 
@@ -70,7 +70,8 @@
 (load "init-jabber")
 (load "init-juick")
 (load "init-gnus")
-(load "init-twitter")
+;; XXX: Not used
+;; (load "init-twitter")
 (load "init-identica")
 (load "init-vkontakte")
 (load "init-google")
@@ -81,3 +82,4 @@
 (load "init-weather")
 
 (load "init-personal")
+
