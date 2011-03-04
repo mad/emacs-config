@@ -62,7 +62,6 @@
                mode-line-buffer-identification))
 
 (require 'desktop)
-(desktop-save-mode t)
 (setq desktop-save t)
 (setq desktop-path '("~/"))
 (add-to-list 'desktop-locals-to-save 'buffer-file-coding-system)
@@ -99,7 +98,11 @@
 
 (delete-selection-mode)
 (transient-mark-mode 1)
-(partial-completion-mode t)
+(if (version< emacs-version "24")
+    (partial-completion-mode t)
+  (setq completion-styles '(partial-completion initials))
+  (setq completion-pcm-complete-word-inserts-delimiters t))
+
 ;; (winner-mode)
 ;; (global-set-key [(shift f9)] 'winner-undo)
 ;; (global-set-key [(shift f10)] 'winner-redo)
