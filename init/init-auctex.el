@@ -15,3 +15,8 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (setq reftex-plug-into-AUCTeX t)
 
+;; Because in new auctex default pdf viewer is Evince
+(setq TeX-view-program-selection '(((output-dvi style-pstricks) "dvips and gv")
+                                   (output-dvi "xdvi")
+                                   (output-pdf "xpdf")
+                                   (output-html "xdg-open")))
