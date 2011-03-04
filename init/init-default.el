@@ -111,6 +111,16 @@
 
 (setq bookmark-save-flag 1)
 
+;; for phases of the moon and for another too
+(setq calendar-time-display-form
+      '(24-hours ":" minutes
+                 (if time-zone " (")
+                 time-zone
+                 (if time-zone ")")))
+
+(setq lunar-phase-names
+      '("Новолуние" "Первая четверть луны" "Полнолуние" "Последняя четверть луны"))
+
 ;; From emacs starter-kit
 (defun recentf-ido-find-file ()
   "Find a recent file using ido."
