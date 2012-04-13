@@ -4,5 +4,6 @@
 (setq auto-mode-alist
       (nconc '(("\\.markdown" . markdown-mode)
                ("\\.text" . markdown-mode)
+               ("\\.md" . markdown-mode)
                ("\\.mdwn" . markdown-mode)) auto-mode-alist))
 
